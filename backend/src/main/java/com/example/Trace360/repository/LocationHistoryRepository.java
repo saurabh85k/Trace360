@@ -7,7 +7,5 @@ import java.util.List;
 
 @Repository
 public interface LocationHistoryRepository extends JpaRepository<LocationHistory, Long> {
-
-    // Fetch all location points for a given package, ordered oldest→newest
     List<LocationHistory> findByPackageIdOrderByTimestampAsc(Long packageId);
 }
