@@ -1,6 +1,5 @@
 package com.example.Trace360.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,16 +14,17 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)   // stores "ADMIN", "USER", "DELIVERY_AGENT" in DB
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     private String email;
 }
