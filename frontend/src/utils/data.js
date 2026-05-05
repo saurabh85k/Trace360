@@ -9,6 +9,8 @@ import {
   BarChart2,
   Map,
   Settings,
+  Search,
+  User,
 } from 'lucide-react';
 
 export const ROUTE_PATH_1 = 'M 40,300 C 100,260 160,180 240,140 C 300,110 340,130 380,100';
@@ -250,6 +252,8 @@ export const SIDEBAR_GROUPS = [
   { key: 'shipments', label: 'Shipments', icon: Package, path: '/shipments' },
   { key: 'reports', label: 'Reports', icon: BarChart2, path: '/reports' },
   { key: 'fleet-map', label: 'Fleet Map', icon: Map, path: '/fleet-map' },
+  { key: 'public-tracking', label: 'Public Tracking', icon: Search, path: '/public-tracking' },
+  { key: 'agent-portal', label: 'Agent Portal', icon: User, path: '/agent-portal' },
   { key: 'about', label: 'About Us', icon: Users, path: '/about' },
   { key: 'contact', label: 'Contact Us', icon: Navigation, path: '/contact' },
   { key: 'settings', label: 'Settings', icon: Settings, path: '/settings' },

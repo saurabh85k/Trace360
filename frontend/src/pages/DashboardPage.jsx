@@ -3,6 +3,7 @@ import { KPI_CARDS, DELIVERY_PERFORMANCE_DATA, DELIVERY_RANGES, STATUS_PIE_DATA 
 import KpiCard from '../components/KpiCard';
 import ReviewSection from '../components/ReviewSection';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { MapContainer, TileLayer } from 'react-leaflet';
 
 export default function DashboardPage() {
   const [deliveryRange, setDeliveryRange] = useState('Last 30 Days');
@@ -106,6 +107,29 @@ export default function DashboardPage() {
                 </div>
              ))}
           </div>
+        </div>
+      </div>
+
+      {/* Mini Fleet Map */}
+      <div className="card h-96 flex flex-col p-0 overflow-hidden relative border border-[var(--border-color)]">
+        <div className="absolute top-0 left-0 w-full z-[1000] p-4 bg-gradient-to-b from-[var(--bg-secondary)] to-transparent pointer-events-none">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] shadow-sm">Live Fleet Overview</h2>
+        </div>
+        <MapContainer 
+          center={[39.8283, -98.5795]} 
+          zoom={4} 
+          style={{ height: '100%', width: '100%', zIndex: 0 }}
+          zoomControl={false}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; OpenStreetMap'
+          />
+        </MapContainer>
+        <div className="absolute bottom-4 right-4 z-[1000]">
+          <a href="/fleet-map" className="bg-[var(--bg-secondary)] text-[var(--text-primary)] px-4 py-2 rounded-md shadow-md text-sm font-medium hover:text-[var(--accent)] transition-colors border border-[var(--border-color)]">
+            Open Full Map
+          </a>
         </div>
       </div>
 

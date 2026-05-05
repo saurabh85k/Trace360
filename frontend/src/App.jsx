@@ -8,6 +8,8 @@ import FleetMapPage from './pages/FleetMapPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ContactUsPage from './pages/ContactUsPage';
 import SettingsPage from './pages/SettingsPage';
+import AgentPortalPage from './pages/AgentPortalPage';
+import PublicTrackingPage from './pages/PublicTrackingPage';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="about" element={<AboutUsPage />} />
         <Route path="contact" element={<ContactUsPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="agent-portal" element={<AgentPortalPage />} />
+        <Route path="public-tracking" element={<PublicTrackingPage />} />
       </Route>
     </Routes>
   );

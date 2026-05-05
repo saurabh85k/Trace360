@@ -48,10 +48,10 @@ export default function Sidebar() {
                 to={group.path}
                 onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) => `
-                  flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all border-l-4
                   ${isActive 
-                    ? 'bg-[var(--accent)] bg-opacity-10 text-[var(--accent)]' 
-                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] hover:text-[var(--text-primary)]'
+                    ? 'bg-[var(--accent)] text-white font-semibold border-[var(--accent)] shadow-sm' 
+                    : 'text-[var(--text-secondary)] font-medium border-transparent hover:bg-[var(--bg-primary)] hover:text-[var(--text-primary)]'
                   }
                 `}
               >
