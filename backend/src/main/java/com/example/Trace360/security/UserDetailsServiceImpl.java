@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -23,11 +22,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User not found with username: " + username));
 
-        // Spring Security expects roles prefixed with ROLE_
-        // e.g. stored as "ADMIN" → granted authority "ROLE_ADMIN"
-        String roleWithPrefix = user.getRole().startsWith("ROLE_")
-                ? user.getRole()
-                : "ROLE_" + user.getRole();
+        // enum se name le: "ADMIN", "USER", "DELIVERY_AGENT"
+        String roleName = user.getRole().name();
+
+        // Spring Security expects ROLE_ prefix
+        String roleWithPrefix = "ROLE_" + roleName;
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
