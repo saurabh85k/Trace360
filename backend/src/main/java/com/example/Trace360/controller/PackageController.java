@@ -1,5 +1,6 @@
 package com.example.Trace360.controller;
 
+
 import com.example.Trace360.entity.Package;
 import com.example.Trace360.entity.DeliveryAgent;
 import com.example.Trace360.entity.PackageStatus;
@@ -8,6 +9,7 @@ import com.example.Trace360.repository.DeliveryAgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,12 @@ public class PackageController {
         newPackage.setStatus(PackageStatus.PENDING);
         newPackage.setLastLocationUpdate(LocalDateTime.now());
         return packageRepository.save(newPackage);
+    }
+
+    // 5. Get all packages (GET)
+    @GetMapping
+    public List<Package> getAllPackages() {
+        return packageRepository.findAll();
     }
 
     // 2. Get Package Details by ID (GET)
