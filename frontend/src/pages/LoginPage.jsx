@@ -1,21 +1,27 @@
 import { useState } from 'react'
-import { Navigation, Eye, EyeOff } from 'lucide-react'
-import { loginUser, registerUser } from '../services/authService'
+import { useNavigate } from 'react-router-dom'
+import { Navigation, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { loginUser, requestRegistrationOtp, verifyRegistrationOtp } from '../services/AuthService'
 import { useAuth } from '../context/AuthContext'
 
 const ROLES = ['USER', 'DELIVERY_AGENT', 'ADMIN']
 
 export default function LoginPage() {
   const { login } = useAuth()
+  const navigate = useNavigate()
   const [mode, setMode] = useState('login') // 'login' | 'register'
   const [form, setForm] = useState({ username: '', password: '', email: '', role: 'USER' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
+  const [otpSent, setOtpSent] = useState(false)
+  const [otpCode, setOtpCode] = useState('')
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }))
     setError('')
+    setSuccessMsg('')
   }
 
   const handleSubmit = async () => {
@@ -25,15 +31,18 @@ export default function LoginPage() {
     }
     setLoading(true)
     setError('')
+    setSuccessMsg('')
     try {
-      let data
       if (mode === 'login') {
-        data = await loginUser(form.username, form.password)
+        const data = await loginUser(form.username, form.password)
+        login(data) // store token + update context
+        navigate('/') // redirect to dashboard
       } else {
         if (!form.email) { setError('Email is required for registration.'); setLoading(false); return }
-        data = await registerUser(form.username, form.password, form.email, form.role)
+        const res = await requestRegistrationOtp(form.username, form.password, form.email, form.role)
+        setSuccessMsg(res.message || 'OTP sent to your email!')
+        setOtpSent(true)
       }
-      login(data) // store token + update context → App re-renders to dashboard
     } catch (err) {
       const msg = err.response?.data?.error
         || err.response?.data?.message
@@ -44,8 +53,32 @@ export default function LoginPage() {
     }
   }
 
+  const handleVerifyOtp = async () => {
+    if (!otpCode) {
+      setError('Please enter the OTP.')
+      return
+    }
+    setLoading(true)
+    setError('')
+    try {
+      const data = await verifyRegistrationOtp(form.username, otpCode)
+      login(data)
+      navigate('/')
+    } catch (err) {
+      const msg = err.response?.data?.error
+        || err.response?.data?.message
+        || 'Invalid OTP. Please try again.'
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') handleSubmit()
+    if (e.key === 'Enter') {
+      if (otpSent) handleVerifyOtp()
+      else handleSubmit()
+    }
   }
 
   return (
@@ -107,7 +140,13 @@ export default function LoginPage() {
             <button
               key={m}
               type="button"
-              onClick={() => { setMode(m); setError('') }}
+              onClick={() => { 
+                setMode(m); 
+                setError(''); 
+                setSuccessMsg(''); 
+                setOtpSent(false); 
+                setOtpCode('');
+              }}
               style={{
                 padding: '10px',
                 borderRadius: '10px',
@@ -129,104 +168,160 @@ export default function LoginPage() {
 
         {/* Form */}
         <div style={{ display: 'grid', gap: '14px' }}>
-          {/* Username */}
-          <div style={{ display: 'grid', gap: '8px' }}>
-            <label style={{ fontSize: '13px', color: '#94A3B8' }}>Username</label>
-            <input
-              value={form.username}
-              onChange={handleChange('username')}
-              onKeyDown={handleKeyDown}
-              placeholder="e.g. alex_carter"
-              style={inputStyle}
-            />
-          </div>
+          
+          {otpSent ? (
+            /* OTP Verification Screen */
+            <div style={{ display: 'grid', gap: '14px' }}>
+              <div style={{ display: 'grid', gap: '8px' }}>
+                <label style={{ fontSize: '13px', color: '#94A3B8' }}>Enter OTP</label>
+                <input
+                  type="text"
+                  value={otpCode}
+                  onChange={(e) => { setOtpCode(e.target.value); setError(''); }}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter 6-digit OTP"
+                  style={inputStyle}
+                  maxLength={6}
+                />
+              </div>
 
-          {/* Email - register only */}
-          {mode === 'register' && (
-            <div style={{ display: 'grid', gap: '8px' }}>
-              <label style={{ fontSize: '13px', color: '#94A3B8' }}>Email</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={handleChange('email')}
-                onKeyDown={handleKeyDown}
-                placeholder="you@example.com"
-                style={inputStyle}
-              />
-            </div>
-          )}
+              {/* Error/Success Messages */}
+              {error && (
+                <div style={{ padding: '12px 14px', borderRadius: '12px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#FCA5A5', fontSize: '13px' }}>
+                  {error}
+                </div>
+              )}
+              {successMsg && !error && (
+                <div style={{ padding: '12px 14px', borderRadius: '12px', background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.25)', color: '#86EFAC', fontSize: '13px' }}>
+                  {successMsg}
+                </div>
+              )}
 
-          {/* Password */}
-          <div style={{ display: 'grid', gap: '8px' }}>
-            <label style={{ fontSize: '13px', color: '#94A3B8' }}>Password</label>
-            <div style={{ position: 'relative' }}>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={form.password}
-                onChange={handleChange('password')}
-                onKeyDown={handleKeyDown}
-                placeholder="••••••••"
-                style={{ ...inputStyle, paddingRight: '44px' }}
-              />
+              {/* Verify OTP Submit */}
               <button
                 type="button"
-                onClick={() => setShowPassword((v) => !v)}
+                onClick={handleVerifyOtp}
+                disabled={loading}
                 style={{
-                  position: 'absolute', right: '12px', top: '50%',
-                  transform: 'translateY(-50%)', background: 'none',
-                  border: 'none', cursor: 'pointer', color: '#64748B',
-                  display: 'flex', alignItems: 'center',
+                  width: '100%', padding: '14px', background: loading ? 'rgba(34,197,94,0.5)' : '#22C55E', color: '#fff', borderRadius: '12px', border: 'none', fontSize: '15px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'background 160ms ease',
                 }}
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {loading ? 'Verifying...' : 'Verify OTP & Register'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOtpSent(false)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: 'none', border: 'none', color: '#94A3B8', fontSize: '14px', cursor: 'pointer', padding: '8px', fontFamily: 'inherit',
+                }}
+              >
+                <ArrowLeft size={16} /> Go Back
               </button>
             </div>
-          </div>
+          ) : (
+            /* Regular Login/Register Form */
+            <>
+              {/* Username */}
+              <div style={{ display: 'grid', gap: '8px' }}>
+                <label style={{ fontSize: '13px', color: '#94A3B8' }}>Username</label>
+                <input
+                  value={form.username}
+                  onChange={handleChange('username')}
+                  onKeyDown={handleKeyDown}
+                  placeholder="e.g. alex_carter"
+                  style={inputStyle}
+                />
+              </div>
 
-          {/* Role - register only */}
-          {mode === 'register' && (
-            <div style={{ display: 'grid', gap: '8px' }}>
-              <label style={{ fontSize: '13px', color: '#94A3B8' }}>Role</label>
-              <select
-                value={form.role}
-                onChange={handleChange('role')}
-                style={inputStyle}
+              {/* Email - register only */}
+              {mode === 'register' && (
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', color: '#94A3B8' }}>Email</label>
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange('email')}
+                    onKeyDown={handleKeyDown}
+                    placeholder="you@example.com"
+                    style={inputStyle}
+                  />
+                </div>
+              )}
+
+              {/* Password */}
+              <div style={{ display: 'grid', gap: '8px' }}>
+                <label style={{ fontSize: '13px', color: '#94A3B8' }}>Password</label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={form.password}
+                    onChange={handleChange('password')}
+                    onKeyDown={handleKeyDown}
+                    placeholder="••••••••"
+                    style={{ ...inputStyle, paddingRight: '44px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    style={{
+                      position: 'absolute', right: '12px', top: '50%',
+                      transform: 'translateY(-50%)', background: 'none',
+                      border: 'none', cursor: 'pointer', color: '#64748B',
+                      display: 'flex', alignItems: 'center',
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Role - register only */}
+              {mode === 'register' && (
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', color: '#94A3B8' }}>Role</label>
+                  <select
+                    value={form.role}
+                    onChange={handleChange('role')}
+                    style={inputStyle}
+                  >
+                    {ROLES.map((r) => (
+                      <option key={r} value={r}>{r.replace('_', ' ')}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Error */}
+              {error && (
+                <div style={{
+                  padding: '12px 14px', borderRadius: '12px',
+                  background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+                  color: '#FCA5A5', fontSize: '13px',
+                }}>
+                  {error}
+                </div>
+              )}
+
+              {/* Submit */}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
+                style={{
+                  width: '100%', padding: '14px',
+                  background: loading ? 'rgba(59,130,246,0.5)' : '#3B82F6',
+                  color: '#fff', borderRadius: '12px', border: 'none',
+                  fontSize: '15px', fontWeight: 700,
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'background 160ms ease',
+                }}
               >
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>{r.replace('_', ' ')}</option>
-                ))}
-              </select>
-            </div>
+                {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Continue to Verify'}
+              </button>
+            </>
           )}
-
-          {/* Error */}
-          {error && (
-            <div style={{
-              padding: '12px 14px', borderRadius: '12px',
-              background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
-              color: '#FCA5A5', fontSize: '13px',
-            }}>
-              {error}
-            </div>
-          )}
-
-          {/* Submit */}
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{
-              width: '100%', padding: '14px',
-              background: loading ? 'rgba(59,130,246,0.5)' : '#3B82F6',
-              color: '#fff', borderRadius: '12px', border: 'none',
-              fontSize: '15px', fontWeight: 700,
-              cursor: loading ? 'not-allowed' : 'pointer',
-              fontFamily: 'inherit',
-              transition: 'background 160ms ease',
-            }}
-          >
-            {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
-          </button>
         </div>
       </div>
     </div>

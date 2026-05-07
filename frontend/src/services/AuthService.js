@@ -21,8 +21,13 @@ export const loginUser = async (username, password) => {
   return response.data // { token, username, role, message }
 }
 
-export const registerUser = async (username, password, email, role) => {
-  const response = await api.post('/auth/register', { username, password, email, role })
+export const requestRegistrationOtp = async (username, password, email, role) => {
+  const response = await api.post('/auth/register/request-otp', { username, password, email, role })
+  return response.data // { message, otp }
+}
+
+export const verifyRegistrationOtp = async (username, otpCode) => {
+  const response = await api.post('/auth/register/verify-otp', { username, otpCode })
   return response.data // { token, username, role, message }
 }
 

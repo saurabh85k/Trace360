@@ -1,11 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Truck, LogOut, X } from 'lucide-react';
+import { Truck, LogOut, LogIn, X } from 'lucide-react';
 import { SIDEBAR_GROUPS } from '../utils/data';
 import { useAppContext } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useAppContext();
+  const { auth, logout } = useAuth();
 
   return (
     <>
@@ -64,10 +66,23 @@ export default function Sidebar() {
 
         {/* User / Footer area */}
         <div className="p-4 border-t border-[var(--border-color)]">
-          <button className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] hover:text-[var(--red)] transition-colors">
-            <LogOut size={18} />
-            Sign Out
-          </button>
+          {auth ? (
+            <button 
+              onClick={logout}
+              className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] hover:text-[var(--red)] transition-colors"
+            >
+              <LogOut size={18} />
+              Sign Out
+            </button>
+          ) : (
+            <NavLink 
+              to="/login"
+              className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] hover:text-[var(--blue)] transition-colors"
+            >
+              <LogIn size={18} />
+              Sign In
+            </NavLink>
+          )}
         </div>
       </aside>
     </>
