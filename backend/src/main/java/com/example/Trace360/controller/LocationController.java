@@ -6,6 +6,7 @@ import com.example.Trace360.entity.Package;
 import com.example.Trace360.entity.DeliveryAgent;
 import com.example.Trace360.repository.LocationHistoryRepository;
 import com.example.Trace360.repository.PackageRepository;
+import com.example.Trace360.util.ETACalculatorUtil;
 import com.example.Trace360.repository.DeliveryAgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,9 @@ public class LocationController {
     @Autowired
     private DeliveryAgentRepository deliveryAgentRepository;
 
+    @Autowired
+    private ETACalculatorUtil etaCalculator;
+
     @PostMapping("/update-location")
     public ResponseEntity<?> updateLocation(@RequestBody LocationUpdateRequest request) {
 
@@ -44,6 +48,13 @@ public class LocationController {
         pkg.setCurrentLng(request.getLng());
         pkg.setLastLocationUpdate(LocalDateTime.now());
         packageRepository.save(pkg);
+
+        double[] result = etaCalculator.calculateDistanceAndETA(
+            request.getLat(), request.getLng(),
+            pkg.getDestinationLat(), pkg.getDestinationLng()
+        );
+        pkg.setEstimatedDeliveryTime(LocalDateTime.now().plusMinutes((long)(result[1] * 60)));
+        packageRepository.save(pkg); // save again with ETA
 
     
         if (request.getAgentId() != null) {
@@ -73,7 +84,7 @@ public class LocationController {
             @PathVariable Long packageId) {
 
         List<LocationHistory> history =
-            locationHistoryRepository.findByPackageIdOrderByTimestampAsc(packageId);
+            locationHistoryRepository.findTopByPackageIdOrderByTimestampAsc(packageId);
 
         return ResponseEntity.ok(history);
     }
