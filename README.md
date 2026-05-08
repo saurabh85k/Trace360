@@ -235,14 +235,13 @@ Frontend (React + Tailwind CSS)
 
 # 👩‍💻 Team Members
 
-| Name |
-|---|---|
-| 👩‍💻 Mimansa Sharma | Team Lead |
+| Members |
+|---|
+| 👩‍💻 Mimansa Sharma – Team Lead |
 | 👨‍💻 Saurabh |
 | 👨‍💻 Sayan |
-| 👨‍💻 Lokesh | 
+| 👨‍💻 Lokesh |
 
----
 
 # 🌟 Future Enhancements
 
