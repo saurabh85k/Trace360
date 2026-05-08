@@ -12,88 +12,95 @@ https://trace360-j0exm3w78-saurabh-kumar-s-projects-ea4fd3f4.vercel.app/
 
 ---
 
-# 📌 Project Overview
+# 📸 Project Preview
 
-Trace360 is a full-stack GPS-enabled logistics tracking platform designed to provide real-time package monitoring, fleet tracking, shipment analytics, and delivery management.
+## 🏠 Dashboard
+![Dashboard](./assets/dashboard.png)
 
-The system allows customers to track packages live on an interactive map while delivery agents periodically update GPS coordinates through the platform.
+---
 
-It combines:
-- Real-time tracking
-- GPS integration
-- Shipment management
-- Fleet analytics
-- Delivery reports
-- Modern dashboard UI
+## 🗺️ Live Fleet Map
+![Fleet Map](./assets/fleetmap.png)
+
+---
+
+## 📦 Shipments
+![Shipments](./assets/shipments.png)
+
+---
+
+## 🔎 Public Tracking
+![Public Tracking](./assets/publictracking.png)
+
+---
+
+# 📌 Overview
+
+Trace360 is a full-stack GPS-enabled logistics tracking platform that provides real-time shipment tracking, fleet monitoring, delivery analytics, and package management.
+
+The system allows:
+- Live package tracking
+- GPS-based fleet visualization
+- Shipment status monitoring
+- Delivery analytics
+- Public tracking system
+- Secure delivery agent management
+
+Built using modern scalable full-stack technologies with responsive UI and real-time updates.
 
 ---
 
 # 📌 Problem Statement
 
-Traditional logistics systems often fail to provide real-time shipment visibility and accurate delivery tracking. Customers face uncertainty regarding package location and estimated delivery times, while logistics companies struggle with fleet monitoring and operational transparency.
+Traditional logistics systems often fail to provide accurate real-time package visibility and fleet monitoring. Customers face uncertainty regarding package location and delivery status, while logistics companies struggle with operational transparency.
 
-Trace360 solves this issue by developing a GPS-enabled logistics tracking system where:
-- Users can track package movement live
-- Delivery agents update GPS coordinates periodically
-- Admins can monitor fleet activity
-- Reports and analytics improve operational efficiency
+Trace360 solves this problem through:
+- Real-time GPS tracking
+- Live shipment monitoring
+- Fleet visualization on maps
+- Delivery analytics & reporting
+- Interactive public tracking system
 
-The platform enhances transparency, delivery management, and customer experience using modern full-stack technologies.
-
----
-
-# 🎯 Objectives
-
-- Build a real-time package tracking platform
-- Integrate GPS-based fleet monitoring
-- Enable shipment status updates
-- Provide public package tracking
-- Visualize live fleet movement
-- Generate delivery analytics reports
-- Develop a scalable logistics management system
+Delivery agents periodically update GPS coordinates, enabling customers and administrators to monitor shipments live.
 
 ---
 
 # ✨ Features
 
 ## 📊 Dashboard
-- Shipment overview
 - Delivery analytics
-- Live statistics
+- Live shipment statistics
+- Fleet activity overview
 - Performance charts
-- Fleet activity monitoring
 
 ## 📦 Shipment Management
-- Track all shipments
-- ETA updates
+- Shipment tracking
+- ETA monitoring
+- Driver assignment
 - Status filtering
-- Driver allocation
 
-## 🗺️ Fleet Map
-- Real-time GPS visualization
-- Interactive maps
+## 🗺️ Fleet Tracking
+- Interactive GPS maps
+- Real-time fleet updates
 - Route monitoring
-- Fleet overview
 
-## 🔎 Public Tracking
-- Track shipments using Tracking ID
+## 🔎 Public Package Tracking
+- Tracking ID search
 - Real-time package updates
-- Public access interface
 
 ## 👨‍💼 Agent Portal
-- Secure authentication
-- Delivery management
+- Secure login system
 - GPS coordinate updates
+- Delivery management
 
 ## 📈 Reports & Analytics
+- Driver performance
 - Fleet efficiency reports
-- Driver performance analytics
-- Delivery success monitoring
+- Delivery analytics
 
 ## ⚙️ Settings
 - Dark mode support
 - Theme customization
-- Responsive design
 
 ---
 
@@ -121,60 +128,29 @@ The platform enhances transparency, delivery management, and customer experience
 
 ---
 
-# 📸 Project Screenshots
-
----
-
-## 🏠 Dashboard
-
-![Dashboard](./assets/dashboard.png)
-
----
-
-## 📦 Shipments Module
-
-![Shipments](./assets/shipments.png)
-
----
-
-## 🗺️ Fleet Map
-
-![Fleet Map](./assets/fleetmap.png)
-
----
-
-## 🔎 Public Tracking
-
-![Public Tracking](./assets/publictracking.png)
-
----
+# 📸 More Screenshots
 
 ## 📈 Reports & Analytics
-
 ![Reports](./assets/reports.png)
 
 ---
 
 ## 👨‍💼 Agent Portal
-
 ![Agent Portal](./assets/agentportal.png)
 
 ---
 
 ## ℹ️ About Us
-
 ![About Us](./assets/aboutus.png)
 
 ---
 
 ## 📬 Contact Us
-
 ![Contact Us](./assets/contactus.png)
 
 ---
 
 ## ⚙️ Settings
-
 ![Settings](./assets/settings.png)
 
 ---
@@ -194,7 +170,7 @@ Backend processes live updates
             ↓
 Frontend displays live tracking
             ↓
-Customer tracks package in real-time
+Customer tracks shipment in real-time
 ```
 
 ---
@@ -211,7 +187,52 @@ Frontend (React + Tailwind CSS)
             MySQL
 ```
 
+---
 
+# 📂 Project Structure
+
+```bash
+Trace360/
+│
+├── assets/
+├── frontend/
+├── backend/
+├── Dockerfile
+└── README.md
+```
+
+---
+
+# 🚀 Installation & Setup
+
+## Clone Repository
+
+```bash
+git clone https://github.com/your-username/Trace360.git
+cd Trace360
+```
+
+---
+
+## Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## Backend Setup
+
+```bash
+cd backend
+mvn clean install
+mvn spring-boot:run
+```
+
+---
 
 # 🔐 Security Features
 
@@ -219,17 +240,6 @@ Frontend (React + Tailwind CSS)
 - Protected APIs
 - Secure Login System
 - Role-based Access
-- Route Protection
-
----
-
-# 🌐 Deployment
-
-## Frontend Deployment
-- Vercel
-
-## Backend Deployment
-- Render
 
 ---
 
@@ -242,29 +252,28 @@ Frontend (React + Tailwind CSS)
 | 👨‍💻 Sayan |
 | 👨‍💻 Lokesh |
 
+---
 
 # 🌟 Future Enhancements
 
 - AI-based route optimization
-- Real GPS device integration
+- Mobile app support
 - Push notifications
-- Mobile application
-- Admin management system
-- Predictive delivery analytics
+- Predictive analytics
+- Real GPS integration
 
 ---
 
 # 📌 Conclusion
 
-Trace360 is a scalable and modern logistics tracking system that integrates real-time GPS tracking, shipment management, analytics, and delivery monitoring into a single platform.
+Trace360 is a modern logistics tracking system integrating GPS-based shipment tracking, analytics, delivery monitoring, and fleet management into a scalable full-stack platform.
 
 The project demonstrates:
-- Full-stack development
-- REST API integration
+- Full-stack architecture
+- REST APIs
 - Real-time communication
-- GPS & map integration
+- Interactive map integration
 - Responsive dashboard UI
-- Modern logistics management architecture
 
 ---
 
@@ -276,7 +285,7 @@ The project demonstrates:
 
 <div align="center">
 
-## 🚚 Trace360 — Real-Time Logistics Tracking System
+## 🚚 Trace360 — Smart Logistics Tracking Platform
 
 Built using React.js + Spring Boot + MySQL
 
